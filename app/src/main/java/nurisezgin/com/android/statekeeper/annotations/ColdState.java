@@ -10,8 +10,4 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 @Target(FIELD)
 @Retention(RUNTIME)
-public @interface ColdState {
-
-    boolean overwrite() default false;
-
-}
+public @interface ColdState { }

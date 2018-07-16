@@ -11,10 +11,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.io.Serializable;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
+
+import nurisezgin.com.android.statekeeper.testutils.Car;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -42,26 +43,25 @@ public class StorageAdapterImpTest {
 
     @Test
     public void should_WriteCorrect() throws IOException {
-        Person person = new Person("John", 12);
+        Car car = new Car("");
 
         OutputStream mockOutputStream = mock(OutputStream.class);
         when(mockFileStreamAdapter.writer()).thenReturn(mockOutputStream);
 
-        storageAdapter.write(() -> person);
+        storageAdapter.write(() -> car);
 
         verify(mockOutputStream).write(any(byte[].class));
     }
 
     @Test
     public void should_ReadCorrect() throws InterruptedException, IOException {
-        final String expectedName = "John";
-        final int age = 12;
+        final String expectedModel = "John";
 
-        Person person = new Person(expectedName, age);
+        Car car = new Car(expectedModel);
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         ObjectOutputStream outputStream = new ObjectOutputStream(byteArrayOutputStream);
-        outputStream.writeObject(person);
+        outputStream.writeObject(car);
         final byte[] bytes = byteArrayOutputStream.toByteArray();
 
         InputStream mockInputStream = mock(InputStream.class);
@@ -79,33 +79,14 @@ public class StorageAdapterImpTest {
         when(mockFileStreamAdapter.reader()).thenReturn(mockInputStream);
         when(mockFileStreamAdapter.length()).thenReturn(bytes.length);
 
-        BlockingQueue<Person> queue = new ArrayBlockingQueue<>(1);
+        BlockingQueue<Car> queue = new ArrayBlockingQueue<>(1);
 
-        storageAdapter.read(o -> queue.offer((Person) o));
+        storageAdapter.read(o -> queue.offer((Car) o));
 
-        Person actual = queue.poll(1, TimeUnit.SECONDS);
-        String actualName = actual.getName();
+        Car actual = queue.poll(1, TimeUnit.SECONDS);
+        String actualName = actual.model;
 
-        assertThat(actualName, is(expectedName));
-    }
-
-    public static class Person implements Serializable {
-
-        private String name;
-        private int age;
-
-        public Person(String name, int age) {
-            this.name = name;
-            this.age = age;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public int getAge() {
-            return age;
-        }
+        assertThat(actualName, is(expectedModel));
     }
 
 }

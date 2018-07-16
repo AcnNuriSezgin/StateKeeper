@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import nurisezgin.com.android.statekeeper.testutils.Car;
+import nurisezgin.com.android.statekeeper.testutils.Suv;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -41,14 +44,13 @@ public class ReflectionAdapterImpTest {
 
     @Test
     public void should_ManipulateFieldValueCorrect() {
-        final String fieldAge = "age";
-        final String name = "John";
-        final int age = 12;
-        final int expected = 15;
+        final String fieldAge = "model";
+        final String name = "BMW";
+        final String expected = "Mercedes";
 
-        Person person = Person.newPerson(name, age);
+        Car car = new Car(name);
 
-        new ReflectionAdapterImp(person)
+        new ReflectionAdapterImp(car)
                 .forEachField(
                         field -> {
                             if (field.getName().equals(fieldAge)) {
@@ -56,60 +58,30 @@ public class ReflectionAdapterImpTest {
                             }
                         });
 
-        int actual = person.age;
+        String actual = car.model;
 
         assertThat(actual, is(equalTo(expected)));
     }
 
     @Test
     public void should_ManipulateSuperClassFieldValueCorrect() {
-        final String fieldAge = "age";
-        final String name = "John";
-        final int age = 12;
-        final String school = "School-1";
-        final int expected = 15;
+        final String fieldAge = "model";
+        final String name = "BMW";
+        final String expectedModel = "Mercedes";
 
-        Student student = Student.newStudent(name, age, school);
+        Suv suv = new Suv(name);
 
-        new ReflectionAdapterImp(student)
+        new ReflectionAdapterImp(suv)
                 .forEachField(
                         field -> {
                             if (field.getName().equals(fieldAge)) {
-                                field.trySetValue(expected);
+                                field.trySetValue(expectedModel);
                             }
                         });
 
-        int actual = student.age;
+        String actual = suv.model;
 
-        assertThat(actual, is(equalTo(expected)));
-    }
-
-    public static class Student extends Person {
-
-        public String school;
-
-        public static Student newStudent(String name, int age, String school) {
-            Student student = new Student();
-            student.name = name;
-            student.age = age;
-            student.school = school;
-            return student;
-        }
-
-    }
-
-    public static class Person {
-
-        public String name;
-        public int age;
-
-        public static Person newPerson(String name, int age) {
-            Person person = new Person();
-            person.name = name;
-            person.age = age;
-            return person;
-        }
-
+        assertThat(actual, is(equalTo(expectedModel)));
     }
 
 }

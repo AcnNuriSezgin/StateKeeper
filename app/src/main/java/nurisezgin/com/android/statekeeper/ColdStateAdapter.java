@@ -77,10 +77,6 @@ public class ColdStateAdapter implements ObjectStateAdapter {
         Object get(String name) {
             return table.get(name);
         }
-
-        private void clear() {
-            table.clear();
-        }
     }
 
 }

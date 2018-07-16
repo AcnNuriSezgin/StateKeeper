@@ -14,7 +14,7 @@ final class FileStreamAdapterImp implements FileStreamAdapter {
 
     private File file;
 
-    public FileStreamAdapterImp(File dir, String fileName) {
+    FileStreamAdapterImp(File dir, String fileName) {
         this.file = new File(dir, fileName);
     }
 

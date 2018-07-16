@@ -3,17 +3,17 @@ package nurisezgin.com.android.statekeeper;
 import com.annimon.stream.function.Consumer;
 import com.annimon.stream.function.Supplier;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.io.Serializable;
-
-import nurisezgin.com.android.statekeeper.annotations.ColdState;
 import nurisezgin.com.android.statekeeper.reflection.ReflectionAdapterFactory;
 import nurisezgin.com.android.statekeeper.storage.StorageAdapter;
+import nurisezgin.com.android.statekeeper.testutils.Car;
+import nurisezgin.com.android.statekeeper.testutils.Garage;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -28,20 +28,25 @@ import static org.mockito.Mockito.verify;
 @RunWith(MockitoJUnitRunner.class)
 public class ColdStateAdapterTest {
 
-    private static final String PERSON_NAME = "John";
-    public static final String FIELD_PERSON = "person";
+    private static final String CAR_MODEL = "BMW";
+    public static final String FIELD_PERSON = "car";
 
     @Mock
     StorageAdapter mockStorageAdapter;
 
     private ColdStateAdapter coldStateAdapter;
-    private People people;
+    private Garage garage;
+
+    @Before
+    public void setUp_() {
+        garage = new Garage();
+        coldStateAdapter = new ColdStateAdapter(
+                mockStorageAdapter, ReflectionAdapterFactory.newReflectionAdapter(garage));
+    }
 
     @Test
     public void should_SaveCorrect() {
-        people = new People(new Person(PERSON_NAME));
-        coldStateAdapter = new ColdStateAdapter(
-                mockStorageAdapter, ReflectionAdapterFactory.newReflectionAdapter(people));
+        garage.setCar(new Car(CAR_MODEL));
 
         ArgumentCaptor<Supplier> captor = ArgumentCaptor.forClass(Supplier.class);
         coldStateAdapter.save();
@@ -50,21 +55,19 @@ public class ColdStateAdapterTest {
 
         Object object = captor.getValue().get();
         ColdStateAdapter.ObjectTable table = (ColdStateAdapter.ObjectTable) object;
-        Person person = (Person) table.get(FIELD_PERSON);
+        Car car = (Car) table.get(FIELD_PERSON);
 
-        assertThat(person.name, is(equalTo(PERSON_NAME)));
+        assertThat(car.model, is(equalTo(CAR_MODEL)));
     }
     
     @Test
     public void should_RestoreCorrect() {
-        people = new People(new Person(""));
-        coldStateAdapter = new ColdStateAdapter(
-                mockStorageAdapter, ReflectionAdapterFactory.newReflectionAdapter(people));
+        garage.setCar(new Car(""));
 
         doAnswer(invocation -> {
             Consumer consumer = (Consumer) invocation.getArguments()[0];
             ColdStateAdapter.ObjectTable table = new ColdStateAdapter.ObjectTable();
-            table.put(FIELD_PERSON, new Person(PERSON_NAME));
+            table.put(FIELD_PERSON, new Car(CAR_MODEL));
 
             consumer.accept(table);
             return null;
@@ -72,29 +75,9 @@ public class ColdStateAdapterTest {
 
         coldStateAdapter.restore();
 
-        String actual = people.person.name;
+        String actual = garage.car.model;
 
-        assertThat(actual, is(equalTo(PERSON_NAME)));
+        assertThat(actual, is(equalTo(CAR_MODEL)));
     }
-
-    public static class People {
-
-        @ColdState
-        public Person person;
-
-        public People(Person person) {
-            this.person = person;
-        }
-    }
-
-    public static class Person implements Serializable {
-
-        public String name;
-
-        public Person(String name) {
-            this.name = name;
-        }
-    }
-
 
 }

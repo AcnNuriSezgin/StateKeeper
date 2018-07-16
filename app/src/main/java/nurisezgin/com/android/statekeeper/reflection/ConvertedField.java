@@ -9,7 +9,7 @@ import lombok.Getter;
  * Created by nuri on 15.07.2018
  */
 @Builder
-public class ConvertedField {
+public final class ConvertedField {
 
     @Getter
     private Class<?> type;
