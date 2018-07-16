@@ -23,7 +23,7 @@ public class ReflectionAdapterImpTest {
         List list = new ArrayList<>();
 
         boolean actual = new ReflectionAdapterImp(list)
-                .isTypeOfThatInterface(Collection.class);
+                .isTypeOfThat(Collection.class);
 
         assertThat(actual, is(expected));
     }
@@ -34,7 +34,7 @@ public class ReflectionAdapterImpTest {
         Map map = new HashMap();
 
         boolean actual = new ReflectionAdapterImp(map)
-                .isTypeOfThatInterface(Collection.class);
+                .isTypeOfThat(Collection.class);
 
         assertThat(actual, is(expected));
     }
@@ -84,7 +84,7 @@ public class ReflectionAdapterImpTest {
         assertThat(actual, is(equalTo(expected)));
     }
 
-    public static class Student extends Person{
+    public static class Student extends Person {
 
         public String school;
 

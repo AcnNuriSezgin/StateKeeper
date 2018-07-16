@@ -28,4 +28,16 @@ public class ConvertedField {
         }
     }
 
+    public boolean hasAnnotation(Class ann) {
+        return field.getAnnotation(ann) != null;
+    }
+
+    public boolean hasType(Class<?> type) {
+        return this.type.isAssignableFrom(type);
+    }
+
+    public boolean isTypeOfThat(Class<?> _interface) {
+        return ReflectionAdapter.isTypeOf(type, _interface);
+    }
+
 }

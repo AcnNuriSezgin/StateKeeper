@@ -17,11 +17,16 @@ public final class ReflectionAdapterImp implements ReflectionAdapter {
     }
 
     @Override
-    public boolean isTypeOfThatInterface(Class<?> _interface) {
+    public boolean isTypeOfThat(Class<?> _interface) {
         Class<?> clazz = object.getClass();
 
-        while (clazz != Object.class) {
+        while (clazz != null && clazz != Object.class) {
             Class<?>[] classes = clazz.getInterfaces();
+
+            if (classes == null || classes.length == 0) {
+                return false;
+            }
+
             for (Class<?> superInterface : classes) {
                 if (superInterface.equals(_interface)) {
                     return true;
