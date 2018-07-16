@@ -64,15 +64,17 @@ public class ColdStateAdapter implements ObjectStateAdapter {
         }
     }
 
-    private static class ObjectTable {
+    static class ObjectTable {
 
         private ConcurrentMap<String, Serializable> table = new ConcurrentHashMap<>();
 
-        private void put(String name, Serializable o) {
-            table.put(name, o);
+        void put(String name, Serializable o) {
+            if (o != null) {
+                table.put(name, o);
+            }
         }
 
-        private Object get(String name) {
+        Object get(String name) {
             return table.get(name);
         }
 
