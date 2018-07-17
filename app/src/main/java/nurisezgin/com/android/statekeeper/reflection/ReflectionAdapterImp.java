@@ -17,33 +17,10 @@ public final class ReflectionAdapterImp implements ReflectionAdapter {
     }
 
     @Override
-    public boolean isTypeOfThat(Class<?> _interface) {
+    public void forEachField(Consumer<ReflectedField> consumer) {
         Class<?> clazz = object.getClass();
 
         while (clazz != null && clazz != Object.class) {
-            Class<?>[] classes = clazz.getInterfaces();
-
-            if (classes == null || classes.length == 0) {
-                return false;
-            }
-
-            for (Class<?> superInterface : classes) {
-                if (superInterface.equals(_interface)) {
-                    return true;
-                }
-            }
-
-            clazz = clazz.getSuperclass();
-        }
-
-        return false;
-    }
-
-    @Override
-    public void forEachField(Consumer<ConvertedField> consumer) {
-        Class<?> clazz = object.getClass();
-
-        while (clazz != Object.class) {
             Field[] fields = clazz.getFields();
 
             Stream.of(fields)
@@ -54,7 +31,7 @@ public final class ReflectionAdapterImp implements ReflectionAdapter {
         }
     }
 
-    private ConvertedField toConvertedField(Field field) {
+    private ReflectedField toConvertedField(Field field) {
         Class<?> type = field.getType();
         String name = field.getName();
         Object value = null;
@@ -64,7 +41,7 @@ public final class ReflectionAdapterImp implements ReflectionAdapter {
             e.printStackTrace();
         }
 
-        return ConvertedField.builder()
+        return ReflectedField.builder()
                 .name(name)
                 .value(value)
                 .type(type)

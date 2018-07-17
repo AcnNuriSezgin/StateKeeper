@@ -9,7 +9,7 @@ import lombok.Getter;
  * Created by nuri on 15.07.2018
  */
 @Builder
-public final class ConvertedField {
+public final class ReflectedField {
 
     @Getter
     private Class<?> type;
@@ -32,12 +32,30 @@ public final class ConvertedField {
         return field.getAnnotation(ann) != null;
     }
 
-    public boolean hasType(Class<?> type) {
+    public boolean typeOf(Class<?> type) {
         return this.type.isAssignableFrom(type);
     }
 
-    public boolean isTypeOfThat(Class<?> _interface) {
-        return ReflectionAdapter.isTypeOf(type, _interface);
+    public boolean isTypeOfThatInterface(Class<?> _interface) {
+        Class<?> clazz = type;
+
+        while (clazz != null && clazz != Object.class) {
+            Class<?>[] classes = clazz.getInterfaces();
+
+            if (classes == null || classes.length == 0) {
+                return false;
+            }
+
+            for (Class<?> superInterface : classes) {
+                if (superInterface.equals(_interface)) {
+                    return true;
+                }
+            }
+
+            clazz = clazz.getSuperclass();
+        }
+
+        return false;
     }
 
 }

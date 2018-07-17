@@ -18,6 +18,8 @@ public class ParcelableList<T extends Serializable> implements Parcelable {
         if (list == null) {
             this.list = new ArrayList<>();
         }
+
+        this.list = list;
     }
 
     protected ParcelableList(Parcel in) {

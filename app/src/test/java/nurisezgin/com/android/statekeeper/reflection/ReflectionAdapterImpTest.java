@@ -2,12 +2,6 @@ package nurisezgin.com.android.statekeeper.reflection;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import nurisezgin.com.android.statekeeper.testutils.Car;
 import nurisezgin.com.android.statekeeper.testutils.Suv;
 
@@ -19,28 +13,6 @@ import static org.junit.Assert.assertThat;
  * Created by nuri on 15.07.2018
  */
 public class ReflectionAdapterImpTest {
-
-    @Test
-    public void should_ListTypeOfCollectionCorrect() {
-        final boolean expected = true;
-        List list = new ArrayList<>();
-
-        boolean actual = new ReflectionAdapterImp(list)
-                .isTypeOfThat(Collection.class);
-
-        assertThat(actual, is(expected));
-    }
-
-    @Test
-    public void should_MapNotTypeOfCollectionCorrect() {
-        final boolean expected = false;
-        Map map = new HashMap();
-
-        boolean actual = new ReflectionAdapterImp(map)
-                .isTypeOfThat(Collection.class);
-
-        assertThat(actual, is(expected));
-    }
 
     @Test
     public void should_ManipulateFieldValueCorrect() {

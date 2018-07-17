@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 
 import nurisezgin.com.android.statekeeper.annotations.HotState;
@@ -183,34 +184,34 @@ public class HotStateAdapterTest {
         assertThat(actual.value, is(equalTo(expected)));
     }
 
-//    @Test
-//    public void should_SaveListCorrect() {
-//        final String expected = "John-parcel";
-//
-//        person.listValue = Arrays.asList(new ListItem(expected));
-//        hotStateAdapter.save();
-//
-//        ListItem actual =
-//                ((ParcelableList<ListItem>) bundle.getParcelable("listValue"))
-//                        .getList().get(0);
-//
-//        assertThat(actual.value, is(equalTo(expected)));
-//    }
-//
-//    @Test
-//    public void should_RestoreListCorrect() {
-//        final String expected = "John-parcel";
-//
-//        ParcelableList<ListItem> value =
-//                new ParcelableList<>(Arrays.asList(new ListItem(expected)));
-//
-//        bundle.putParcelable("listValue", value);
-//        hotStateAdapter.restore();
-//
-//        ListItem actual = person.listValue.get(0);
-//
-//        assertThat(actual.value, is(equalTo(expected)));
-//    }
+    @Test
+    public void should_SaveListCorrect() {
+        final String expected = "John-parcel";
+
+        person.listValue = Arrays.asList(new ListItem(expected));
+        hotStateAdapter.save();
+
+        ListItem actual =
+                ((ParcelableList<ListItem>) bundle.getParcelable("listValue"))
+                        .getList().get(0);
+
+        assertThat(actual.value, is(equalTo(expected)));
+    }
+
+    @Test
+    public void should_RestoreListCorrect() {
+        final String expected = "John-parcel";
+
+        ParcelableList<ListItem> value =
+                new ParcelableList<>(Arrays.asList(new ListItem(expected)));
+
+        bundle.putParcelable("listValue", value);
+        hotStateAdapter.restore();
+
+        ListItem actual = person.listValue.get(0);
+
+        assertThat(actual.value, is(equalTo(expected)));
+    }
 
     public static class Person {
 

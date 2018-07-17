@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import nurisezgin.com.android.statekeeper.annotations.ColdState;
-import nurisezgin.com.android.statekeeper.reflection.ConvertedField;
+import nurisezgin.com.android.statekeeper.reflection.ReflectedField;
 import nurisezgin.com.android.statekeeper.reflection.ReflectionAdapter;
 import nurisezgin.com.android.statekeeper.storage.StorageAdapter;
 
@@ -32,7 +32,7 @@ public class ColdStateAdapter implements ObjectStateAdapter {
         storageAdapter.write(() -> table);
     }
 
-    private void saveToStorage(ConvertedField field) {
+    private void saveToStorage(ReflectedField field) {
         if (field.hasAnnotation(ColdState.class)) {
             final String fieldName = field.getName();
             final Object fieldValue = field.getValue();
@@ -41,7 +41,7 @@ public class ColdStateAdapter implements ObjectStateAdapter {
                 return;
             }
 
-            if (field.isTypeOfThat(Serializable.class)) {
+            if (field.isTypeOfThatInterface(Serializable.class)) {
                 table.put(fieldName, (Serializable) fieldValue);
             }
         }
@@ -53,11 +53,11 @@ public class ColdStateAdapter implements ObjectStateAdapter {
         reflectionAdapter.forEachField(this::restoreFromStorage);
     }
 
-    private void restoreFromStorage(ConvertedField field) {
+    private void restoreFromStorage(ReflectedField field) {
         if (field.hasAnnotation(ColdState.class)) {
             final String fieldName = field.getName();
 
-            if (field.isTypeOfThat(Serializable.class)) {
+            if (field.isTypeOfThatInterface(Serializable.class)) {
                 Object value = table.get(fieldName);
                 field.trySetValue(value);
             }
