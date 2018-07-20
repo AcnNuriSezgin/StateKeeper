@@ -51,11 +51,11 @@ public class StateKeeperTest {
             folk.assets.add(new ListItem("listItem-class#" + i));
         }
 
-        StateKeeper.save(ctx.getCacheDir(), bundle, folk);
+        StateKeeper.dispatchSave(ctx.getCacheDir(), bundle, folk);
 
         folk.assets = null;
 
-        StateKeeper.restore(ctx.getCacheDir(), bundle, folk);
+        StateKeeper.dispatchRestore(ctx.getCacheDir(), bundle, folk);
 
         assertThat(folk, is(getMatcher()));
     }

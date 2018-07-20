@@ -15,12 +15,12 @@ public final class StateKeeper implements StateChain {
 
     private List<StateChain> chains = new ArrayList<>();
 
-    StateKeeper() {
+    public StateKeeper() {
         addStateHandler(new HotStateChain());
         addStateHandler(new ColdStateChain());
     }
 
-    public static void save(File cachePath, Bundle bundle, Object thiz) {
+    public static void dispatchSave(File cachePath, Bundle bundle, Object thiz) {
         final StateContext stateContext = StateContext.builder()
                 .cachePath(cachePath)
                 .bundle(bundle)
@@ -36,7 +36,7 @@ public final class StateKeeper implements StateChain {
                 .forEach(adapter -> adapter.save(stateContext));
     }
 
-    public static void restore(File cachePath, Bundle bundle, Object thiz) {
+    public static void dispatchRestore(File cachePath, Bundle bundle, Object thiz) {
         final StateContext stateContext = StateContext.builder()
                 .cachePath(cachePath)
                 .bundle(bundle)
