@@ -11,7 +11,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 
-import static nurisezgin.com.android.statekeeper.storage.StreamUtil.closeStreams;
+import static nurisezgin.com.android.statekeeper.util.StreamUtil.closeStreams;
 
 /**
  * Created by nuri on 16.07.2018
@@ -65,5 +65,10 @@ final class StorageAdapterImp implements StorageAdapter {
         } finally {
             closeStreams(inputStream, dataInputStream, byteArrayInputStream, objectInputStream);
         }
+    }
+
+    @Override
+    public void delete() {
+        fileStreamAdapter.delete();
     }
 }

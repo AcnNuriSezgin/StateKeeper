@@ -1,4 +1,4 @@
-package nurisezgin.com.android.statekeeper;
+package nurisezgin.com.android.statekeeper.util;
 
 import android.os.Parcel;
 import android.os.Parcelable;

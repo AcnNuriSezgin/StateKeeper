@@ -10,7 +10,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 @Target(FIELD)
 @Retention(RUNTIME)
-public @interface ColdStateIdentifier {
+public @interface StateIdentifier {
 
     String value() default "";
 

@@ -1,20 +1,19 @@
 package nurisezgin.com.android.statekeeper;
 
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.io.Serializable;
 import java.util.Arrays;
-import java.util.List;
 
-import nurisezgin.com.android.statekeeper.annotations.HotState;
-import nurisezgin.com.android.statekeeper.reflection.ReflectionAdapterFactory;
+import nurisezgin.com.android.statekeeper.testutils.ListItem;
+import nurisezgin.com.android.statekeeper.testutils.ParcelableClass;
+import nurisezgin.com.android.statekeeper.testutils.Person;
+import nurisezgin.com.android.statekeeper.testutils.SerializableClass;
+import nurisezgin.com.android.statekeeper.util.ParcelableList;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -24,19 +23,23 @@ import static org.hamcrest.core.Is.is;
  * Created by nuri on 15.07.2018
  */
 @RunWith(AndroidJUnit4.class)
-public class HotStateAdapterTest {
+public class HotStateChainTest {
 
     private Person person;
     private Bundle bundle;
-    private HotStateAdapter hotStateAdapter;
+    private HotStateChain hotStateAdapter;
+    private StateContext stateContext;
 
     @Before
     public void setUp_() {
         person = new Person();
-
         bundle = new Bundle();
-        hotStateAdapter = new HotStateAdapter(
-                bundle, ReflectionAdapterFactory.newReflectionAdapter(person));
+
+        stateContext = StateContext.builder()
+                .bundle(bundle)
+                .thiz(person)
+                .build();
+        hotStateAdapter = new HotStateChain();
     }
 
     @Test
@@ -44,7 +47,7 @@ public class HotStateAdapterTest {
         final boolean expected = true;
 
         person.booleanValue = expected;
-        hotStateAdapter.save();
+        hotStateAdapter.save(stateContext);
 
         boolean actual = bundle.getBoolean("booleanValue");
 
@@ -56,7 +59,7 @@ public class HotStateAdapterTest {
         final boolean expected = true;
 
         bundle.putBoolean("booleanValue", expected);
-        hotStateAdapter.restore();
+        hotStateAdapter.restore(stateContext);
 
         boolean actual = person.booleanValue;
 
@@ -68,7 +71,7 @@ public class HotStateAdapterTest {
         final int expected = 101;
 
         person.intValue = expected;
-        hotStateAdapter.save();
+        hotStateAdapter.save(stateContext);
 
         int actual = bundle.getInt("intValue");
 
@@ -80,7 +83,7 @@ public class HotStateAdapterTest {
         final int expected = 101;
 
         bundle.putInt("intValue", expected);
-        hotStateAdapter.restore();
+        hotStateAdapter.restore(stateContext);
 
         int actual = person.intValue;
 
@@ -92,7 +95,7 @@ public class HotStateAdapterTest {
         final float expected = 10.10f;
 
         person.floatValue = expected;
-        hotStateAdapter.save();
+        hotStateAdapter.save(stateContext);
 
         float actual = bundle.getFloat("floatValue");
 
@@ -104,7 +107,7 @@ public class HotStateAdapterTest {
         final float expected = 10.10f;
 
         bundle.putFloat("floatValue", expected);
-        hotStateAdapter.restore();
+        hotStateAdapter.restore(stateContext);
 
         float actual = person.floatValue;
 
@@ -116,7 +119,7 @@ public class HotStateAdapterTest {
         final String expected = "John";
 
         person.stringValue = expected;
-        hotStateAdapter.save();
+        hotStateAdapter.save(stateContext);
 
         String actual = bundle.getString("stringValue");
 
@@ -128,7 +131,7 @@ public class HotStateAdapterTest {
         final String expected = "John";
 
         bundle.putString("stringValue", expected);
-        hotStateAdapter.restore();
+        hotStateAdapter.restore(stateContext);
 
         String actual = person.stringValue;
 
@@ -140,7 +143,7 @@ public class HotStateAdapterTest {
         final String expected = "John-serialize";
 
         person.serializableValue = new SerializableClass(expected);
-        hotStateAdapter.save();
+        hotStateAdapter.save(stateContext);
 
         SerializableClass actual = (SerializableClass)
                 bundle.getSerializable("serializableValue");
@@ -153,7 +156,7 @@ public class HotStateAdapterTest {
         final String expected = "John-serialize";
 
         bundle.putSerializable("serializableValue", new SerializableClass(expected));
-        hotStateAdapter.restore();
+        hotStateAdapter.restore(stateContext);
 
         SerializableClass actual = person.serializableValue;
 
@@ -165,7 +168,7 @@ public class HotStateAdapterTest {
         final String expected = "John-parcel";
 
         person.parcelableValue = new ParcelableClass(expected);
-        hotStateAdapter.save();
+        hotStateAdapter.save(stateContext);
 
         ParcelableClass actual = bundle.getParcelable("parcelableValue");
 
@@ -177,7 +180,7 @@ public class HotStateAdapterTest {
         final String expected = "John-parcel";
 
         bundle.putParcelable("parcelableValue", new ParcelableClass(expected));
-        hotStateAdapter.restore();
+        hotStateAdapter.restore(stateContext);
 
         ParcelableClass actual = person.parcelableValue;
 
@@ -189,7 +192,7 @@ public class HotStateAdapterTest {
         final String expected = "John-parcel";
 
         person.listValue = Arrays.asList(new ListItem(expected));
-        hotStateAdapter.save();
+        hotStateAdapter.save(stateContext);
 
         ListItem actual =
                 ((ParcelableList<ListItem>) bundle.getParcelable("listValue"))
@@ -206,89 +209,11 @@ public class HotStateAdapterTest {
                 new ParcelableList<>(Arrays.asList(new ListItem(expected)));
 
         bundle.putParcelable("listValue", value);
-        hotStateAdapter.restore();
+        hotStateAdapter.restore(stateContext);
 
         ListItem actual = person.listValue.get(0);
 
         assertThat(actual.value, is(equalTo(expected)));
-    }
-
-    public static class Person {
-
-        @HotState
-        public boolean booleanValue;
-
-        @HotState
-        public int intValue;
-
-        @HotState
-        public float floatValue;
-
-        @HotState
-        public String stringValue;
-
-        @HotState
-        public SerializableClass serializableValue;
-
-        @HotState
-        public ParcelableClass parcelableValue;
-
-        @HotState
-        public List<ListItem> listValue;
-
-    }
-
-    public static class SerializableClass implements Serializable {
-
-        public String value;
-
-        public SerializableClass(String value) {
-            this.value = value;
-        }
-    }
-
-    public static class ParcelableClass implements Parcelable {
-
-        public String value;
-
-        public ParcelableClass(String value) {
-            this.value = value;
-        }
-
-        public ParcelableClass(Parcel in) {
-            value = in.readString();
-        }
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel dest, int flags) {
-            dest.writeString(value);
-        }
-
-        public static Creator<ParcelableClass> CREATOR = new Creator<ParcelableClass>(){
-            @Override
-            public ParcelableClass createFromParcel(Parcel source) {
-                return new ParcelableClass(source);
-            }
-
-            @Override
-            public ParcelableClass[] newArray(int size) {
-                return new ParcelableClass[size];
-            }
-        };
-    }
-
-    public static class ListItem implements Serializable {
-
-        public String value;
-
-        public ListItem(String value) {
-            this.value = value;
-        }
     }
 
 }

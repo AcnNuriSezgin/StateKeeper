@@ -39,6 +39,14 @@ public final class ReflectedField {
     public boolean isTypeOfThatInterface(Class<?> _interface) {
         Class<?> clazz = type;
 
+        if (clazz == null) {
+            return false;
+        }
+
+        if (clazz.equals(_interface)) {
+            return true;
+        }
+
         while (clazz != null && clazz != Object.class) {
             Class<?>[] classes = clazz.getInterfaces();
 

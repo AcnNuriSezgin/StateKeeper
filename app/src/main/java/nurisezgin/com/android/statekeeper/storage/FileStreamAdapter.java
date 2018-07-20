@@ -15,4 +15,6 @@ interface FileStreamAdapter {
 
     int length();
 
+    void delete();
+
 }

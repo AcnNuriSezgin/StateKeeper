@@ -30,6 +30,17 @@ final class FileStreamAdapterImp implements FileStreamAdapter {
 
     @Override
     public int length() {
-        return (int) file.length();
+        if (file.exists()) {
+            return (int) file.length();
+        }
+
+        return 0;
+    }
+
+    @Override
+    public void delete() {
+        if (file.exists()) {
+            file.delete();
+        }
     }
 }

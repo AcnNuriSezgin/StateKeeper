@@ -11,7 +11,20 @@ import static org.hamcrest.MatcherAssert.assertThat;
 /**
  * Created by nuri on 17.07.2018
  */
-public class ConvertedFieldTest {
+public class ReflectedFieldTest {
+
+    @Test
+    public void should_ListTypeOfListCorrect() {
+        final boolean expected = true;
+
+        ReflectedField field = ReflectedField.builder()
+                .type(List.class)
+                .build();
+
+        boolean actual = field.isTypeOfThatInterface(List.class);
+
+        assertThat(actual, is(expected));
+    }
 
     @Test
     public void should_ListTypeOfSerializableCorrect() {

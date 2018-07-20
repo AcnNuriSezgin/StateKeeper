@@ -1,79 +1,63 @@
 package nurisezgin.com.android.statekeeper;
 
-import com.annimon.stream.function.Consumer;
-import com.annimon.stream.function.Supplier;
-
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 
-import nurisezgin.com.android.statekeeper.reflection.ReflectionAdapterFactory;
-import nurisezgin.com.android.statekeeper.storage.StorageAdapter;
+import java.io.File;
+
 import nurisezgin.com.android.statekeeper.testutils.Car;
 import nurisezgin.com.android.statekeeper.testutils.Garage;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.verify;
 
 /**
  * Created by nuri on 16.07.2018
  */
-@RunWith(MockitoJUnitRunner.class)
 public class ColdStateAdapterTest {
 
+    private static final String IDENTIFIER = "::ColdStateAdapterTest#identifier";
     private static final String CAR_MODEL = "BMW";
-    public static final String FIELD_PERSON = "car";
-
-    @Mock
-    StorageAdapter mockStorageAdapter;
-
-    private ColdStateAdapter coldStateAdapter;
+    private StateContext stateContext;
+    private ColdStateChain coldStateAdapter;
     private Garage garage;
 
     @Before
     public void setUp_() {
-        garage = new Garage();
-        coldStateAdapter = new ColdStateAdapter(
-                mockStorageAdapter, ReflectionAdapterFactory.newReflectionAdapter(garage));
+        garage = new Garage(IDENTIFIER);
+        stateContext = StateContext.builder()
+                .bundle(null)
+                .cachePath(new File("."))
+                .thiz(garage)
+                .build();
+
+        coldStateAdapter = new ColdStateChain();
+    }
+
+    @After
+    public void tearDown_() {
+        new File(".", IDENTIFIER).delete();
     }
 
     @Test
-    public void should_SaveCorrect() {
+    public void should_SaveToFileCorrect() {
         garage.setCar(new Car(CAR_MODEL));
+        coldStateAdapter.save(stateContext);
 
-        ArgumentCaptor<Supplier> captor = ArgumentCaptor.forClass(Supplier.class);
-        coldStateAdapter.save();
+        boolean isFileExist = new File(".", IDENTIFIER).exists();
 
-        verify(mockStorageAdapter).write(captor.capture());
-
-        Object object = captor.getValue().get();
-        ColdStateAdapter.ObjectTable table = (ColdStateAdapter.ObjectTable) object;
-        Car car = (Car) table.get(FIELD_PERSON);
-
-        assertThat(car.model, is(equalTo(CAR_MODEL)));
+        assertThat(isFileExist, is(true));
     }
     
     @Test
-    public void should_RestoreCorrect() {
+    public void should_RestoreFromFileCorrect() {
+        garage.setCar(new Car(CAR_MODEL));
+        coldStateAdapter.save(stateContext);
+
         garage.setCar(new Car(""));
-
-        doAnswer(invocation -> {
-            Consumer consumer = (Consumer) invocation.getArguments()[0];
-            ColdStateAdapter.ObjectTable table = new ColdStateAdapter.ObjectTable();
-            table.put(FIELD_PERSON, new Car(CAR_MODEL));
-
-            consumer.accept(table);
-            return null;
-        }).when(mockStorageAdapter).read(any());
-
-        coldStateAdapter.restore();
+        coldStateAdapter.restore(stateContext);
 
         String actual = garage.car.model;
 

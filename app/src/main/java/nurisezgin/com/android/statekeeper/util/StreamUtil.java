@@ -1,4 +1,4 @@
-package nurisezgin.com.android.statekeeper.storage;
+package nurisezgin.com.android.statekeeper.util;
 
 import java.io.Closeable;
 import java.io.IOException;

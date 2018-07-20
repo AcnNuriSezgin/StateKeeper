@@ -12,4 +12,5 @@ public interface StorageAdapter {
 
     void read(Consumer<Object> readAction);
 
+    void delete();
 }
