@@ -19,10 +19,6 @@ before_script:
 
 script: ./gradlew check connectedCheck --stacktrace
 
-branches:
-  except:
-    - master
-
 notifications:
   email: false
 
