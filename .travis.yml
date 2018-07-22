@@ -1,21 +1,6 @@
 Skip to content
  
 Search or jump to…
-
-Pull requests
-Issues
-Marketplace
-Explore
- @AcnNuriSezgin Sign out
-1,133
-21,602 4,236 JakeWharton/butterknife
- Code  Issues 75  Pull requests 18  Projects 0  Insights
-butterknife/.travis.yml
-9faa2c5  on 15 Dec 2017
-@Jawnnypoo Jawnnypoo Remove android:components block
-@JakeWharton @jaredsburrows @MichaelEvans @lukaciko @jrodbx @Jawnnypoo @kageiit
-     
-52 lines (39 sloc)  1.6 KB
 language: android
 
 jdk:
