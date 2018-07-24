@@ -64,7 +64,7 @@ implementation 'nurisezgin.com.android.statekeeper:statekeeper:1.0.0'
     }
 ```
 ## Authors
-* **Nuri SEZGIN
+* **Nuri SEZGIN**-[Email](acnnurisezgin@gmail.com)
 
 ## License
 Copyright 2018 Nuri SEZGIN
