@@ -33,7 +33,7 @@ implementation 'nurisezgin.com.android.statekeeper:statekeeper:1.0.0'
     }
 ```
 
-* HotState & ColdState. In general **ColdState means save to file and restore from file. We have to know file name in that case we use a field that annotated with **StateIdentifier also we avoid state confusing for multi instance fragments and activities with that field. Other good thing for **ColdState we never get TransactionTooLargeException.
+* HotState & ColdState. In general **ColdState** means save to file and restore from file. We have to know file name in that case we use a field that annotated with **StateIdentifier** also we avoid state confusing for multi instance fragments and activities with that field. Other good thing for **ColdState** we never get TransactionTooLargeException.
 ```java
     @StateIdentifier
     @HotState
