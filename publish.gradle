@@ -1,0 +1,52 @@
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
+
+GROUP_ID = GROUP_NAME
+ARTIFACT_ID = ARTIFACT_NAME
+VERSION = VERSION
+
+def getUser() {
+    return System.getenv("user")
+}
+
+def getApiKey() {
+    return System.getenv("apikey")
+}
+
+def getPassPhrase() {
+    return System.getenv("passphrase")
+}
+
+publishing {
+    publications {
+        MyPublication(MavenPublication) {
+            groupId GROUP_ID
+            artifactId ARTIFACT_ID
+            version VERSION
+        }
+    }
+}
+
+bintray {
+    user = getUser()
+    key = getApiKey()
+    publications = ['MyPublication']
+    pkg {
+        repo = 'android-releases'
+        name = 'androidstatekeeper'
+        userOrg = user
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/AcnNuriSezgin/StateKeeper'
+        publicDownloadNumbers = true
+        publish = true
+        version {
+            name = VERSION
+            desc = 'Android State Keeper'
+            gpg {
+                sign = true
+                passphrase = getPassPhrase()
+            }
+        }
+    }
+}
