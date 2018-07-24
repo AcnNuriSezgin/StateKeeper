@@ -2,9 +2,9 @@ apply plugin: 'maven'
 apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
 
-GROUP_ID = GROUP_NAME
-ARTIFACT_ID = ARTIFACT_NAME
-VERSION = VERSION
+def GROUP_ID = GROUP_NAME
+def ARTIFACT_ID = ARTIFACT_NAME
+def VERSION = VERSION_NAME
 
 def getUser() {
     return System.getenv("user")
