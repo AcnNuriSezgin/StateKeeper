@@ -1,8 +1,6 @@
 # StateKeeper
 StateKeeper keeps your activity and fragment states and restores them when do you need. The library provides two different states, there are HotState and ColdState. If a field annotated with HotState, it manages over Bundle. When we use ColdState, its state saves to File System and restores from there. 
 
-## Getting Started
-
 ### Prerequisites
 First of all you must add statekeeper library to build.gradle file.
 ```groovy
