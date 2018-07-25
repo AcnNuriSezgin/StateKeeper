@@ -48,6 +48,10 @@ implementation 'nurisezgin.com.android.statekeeper:statekeeper:1.0.0'
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if (identifier == null) {
+            identifier = UUID.randomUUID().toString();
+        }
     }
 
     @Override
