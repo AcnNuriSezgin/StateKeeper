@@ -4,7 +4,7 @@ StateKeeper keeps your activity and fragment states and restores them when do yo
 ### Prerequisites
 First of all you must add statekeeper library to build.gradle file.
 ```groovy
-implementation 'nurisezgin.com.android.statekeeper:statekeeper:1.0.2'
+implementation 'nurisezgin.com.android.statekeeper:statekeeper:1.0.3'
 ```
 
 ## How To Use
